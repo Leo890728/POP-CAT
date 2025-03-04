@@ -44,6 +44,7 @@
         #op {
             background-image: url(imgs/op.png);
         }
+
     </style>
 </head>
 <body>
@@ -56,7 +57,7 @@
         var audios = [...Array(4).keys()].map(i => new Audio("pops/pop" + (i+1) + ".mp3"));
         var catImg = document.querySelector(".cat-img");
         function pop() {
-            let audio = audios[Math.floor(Math.random() * audios.length) + 1];
+            let audio = audios[Math.floor(Math.random() * audios.length)];
             audio.play();
             catImg.setAttribute("id", "op");
             setTimeout(() => {
