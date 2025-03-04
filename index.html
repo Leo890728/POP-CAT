@@ -19,11 +19,10 @@
             margin: 0 auto;
             height: 10vh;
         }
-        .pop-count {
+        .counter {
             display: block;
             height: 10vh;
             text-align: center;
-            font-size: 80px;
             font-weight: 900;
             color: white;
             user-select: none;
@@ -32,6 +31,20 @@
             -webkit-text-stroke-color: black;
             transition: all 0.3s;
         }
+
+        .pop-count {
+            font-size: 80px;
+        }
+
+        .cps-count {
+            position: absolute;
+            left: 50%;
+            bottom: 5vh;
+            transform: translate(-50%);
+            word-break: break-all;
+            font-size: 40px;
+        }
+
         .cat-img {
             background-repeat: no-repeat;
             background-size: contain;
@@ -52,27 +65,42 @@
 </head>
 <body>
     <img src="imgs/popcat.svg" alt="POPCAT" class="title">
-    <div class="pop-count">0</div>
+    <div class="pop-count counter">0</div>
     <div class="cat-img" id="p" onclick="pop()">
+        <div class="cps-count counter">CPS: 0</div>
     </div>
     <script>
         var count = 0;
         var audios = [...Array(4).keys()].map(i => new Audio("pops/pop" + (i+1) + ".mp3"));
         var catImg = document.querySelector(".cat-img");
-        var popCount = document.querySelector(".pop-count");
+        var popCounter = document.querySelector(".pop-count");
+        var clickRecord = [];
+        var cps = 0;
+        var cpsCounter = document.querySelector(".cps-count");
+
         function pop() {
             let audio = audios[Math.floor(Math.random() * audios.length)];
             audio.play();
             catImg.setAttribute("id", "op");
-            popCount.style.rotate = Math.random() > 0.5 ? "10deg" : "-10deg";
-            popCount.style.scale = "1.2";
-            popCount.innerHTML = (++count).toString();
+            popCounter.style.rotate = Math.random() > 0.5 ? "10deg" : "-10deg";
+            popCounter.style.scale = "1.2";
+            popCounter.innerHTML = (++count).toString();
             setTimeout(() => {
                 catImg.setAttribute("id", "p");
-                popCount.style.rotate = "0deg";
-                popCount.style.scale = "1";
+                popCounter.style.rotate = "0deg";
+                popCounter.style.scale = "1";
             }, 100)
+            clickRecord.push(Date.now());
         }
+
+        function CPS_Update() {
+            clickRecord = clickRecord.filter(time => time > Date.now() - 1000);
+            cps = clickRecord.length;
+            cpsCounter.innerHTML = "CPS: " + cps.toString();
+            cpsCounter.style.bottom = (cps === 0) ? "-15vh" : "5vh";
+        }
+        setInterval(CPS_Update, 1000);
+
     </script>
 </body>
 </html>
