@@ -3,9 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>POPCAT CLASSIC</title>
+    <style>
+        body {
+            background-image: url(imgs/bg.jpg);
+            display: inline;
+            height: 90vh;
+            width: 90vw;
+            margin: auto;
+            padding: 0;
+            font-family: Nunito, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+        }
+        .title {
+            display: block;
+            margin: 0 auto;
+            height: 10vh;
+        }
+        .pop-count {
+            display: block;
+            height: 10vh;
+            text-align: center;
+            font-size: 100px;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 0 10px black;
+            -webkit-text-stroke-width: 2px;
+            -webkit-text-stroke-color: black;
+
+        }
+        .cat-img {
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            height: 80vh;
+            margin: auto;
+        }
+
+        #p {
+            background-image: url(imgs/p.png);
+        }
+        #op {
+            background-image: url(imgs/op.png);
+        }
+    </style>
 </head>
 <body>
     <img src="imgs/popcat.svg" alt="POPCAT" class="title">
     <div class="pop-count">0</div>
+    <div class="cat-img" id="p" onclick="pop()">
+    </div>
+    <script>
+        var count = 0;
+        var audios = [...Array(4).keys()].map(i => new Audio("pops/pop" + (i+1) + ".mp3"));
+        var catImg = document.querySelector(".cat-img");
+        function pop() {
+            let audio = audios[Math.floor(Math.random() * audios.length) + 1];
+            audio.play();
+            catImg.setAttribute("id", "op");
+            setTimeout(() => {
+                catImg.setAttribute("id", "p");
+            }, 100)
+            document.querySelector(".pop-count").innerHTML = (++count).toString();
+        }
+    </script>
 </body>
 </html>
