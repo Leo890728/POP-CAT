@@ -12,6 +12,7 @@
             margin: auto;
             padding: 0;
             font-family: Nunito, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+            overflow: hidden;
         }
         .title {
             display: block;
@@ -22,13 +23,14 @@
             display: block;
             height: 10vh;
             text-align: center;
-            font-size: 100px;
+            font-size: 80px;
             font-weight: 900;
             color: white;
+            user-select: none;
             text-shadow: 0 0 10px black;
             -webkit-text-stroke-width: 2px;
             -webkit-text-stroke-color: black;
-
+            transition: all 0.3s;
         }
         .cat-img {
             background-repeat: no-repeat;
@@ -41,6 +43,7 @@
         #p {
             background-image: url(imgs/p.png);
         }
+
         #op {
             background-image: url(imgs/op.png);
         }
@@ -56,14 +59,19 @@
         var count = 0;
         var audios = [...Array(4).keys()].map(i => new Audio("pops/pop" + (i+1) + ".mp3"));
         var catImg = document.querySelector(".cat-img");
+        var popCount = document.querySelector(".pop-count");
         function pop() {
             let audio = audios[Math.floor(Math.random() * audios.length)];
             audio.play();
             catImg.setAttribute("id", "op");
+            popCount.style.rotate = Math.random() > 0.5 ? "10deg" : "-10deg";
+            popCount.style.scale = "1.2";
+            popCount.innerHTML = (++count).toString();
             setTimeout(() => {
                 catImg.setAttribute("id", "p");
+                popCount.style.rotate = "0deg";
+                popCount.style.scale = "1";
             }, 100)
-            document.querySelector(".pop-count").innerHTML = (++count).toString();
         }
     </script>
 </body>
