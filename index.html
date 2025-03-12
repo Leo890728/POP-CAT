@@ -14,14 +14,18 @@
             font-family: Nunito, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
             overflow: hidden;
         }
+
         .title {
             display: block;
             margin: 0 auto;
             height: 10vh;
+            user-select: none;
         }
+
         .counter {
             display: block;
             height: 10vh;
+            width: 100vw;
             text-align: center;
             font-weight: 900;
             color: white;
@@ -33,7 +37,7 @@
         }
 
         .pop-count {
-            font-size: 80px;
+            font-size: 60px;
         }
 
         .cps-count {
@@ -66,10 +70,12 @@
 <body>
     <img src="imgs/popcat.svg" alt="POPCAT" class="title">
     <div class="pop-count counter">0</div>
-    <div class="cat-img" id="p" onclick="pop()">
+    <div class="cat-img" id="p" onclick="pop();">
         <div class="cps-count counter">CPS: 0</div>
     </div>
     <script>
+        var preload = new Image();
+        preload.src = "imgs/op.png";
         var count = 0;
         var audios = [...Array(4).keys()].map(i => new Audio("pops/pop" + (i+1) + ".mp3"));
         var catImg = document.querySelector(".cat-img");
@@ -78,12 +84,14 @@
         var cps = 0;
         var cpsCounter = document.querySelector(".cps-count");
 
+        document.addEventListener("keydown", pop);
+
         function pop() {
             let audio = audios[Math.floor(Math.random() * audios.length)];
             audio.play();
             catImg.setAttribute("id", "op");
             popCounter.style.rotate = Math.random() > 0.5 ? "10deg" : "-10deg";
-            popCounter.style.scale = "1.2";
+            popCounter.style.scale = (1 + Math.min(cps*0.05, 1.5)).toString();
             popCounter.innerHTML = (++count).toString();
             setTimeout(() => {
                 catImg.setAttribute("id", "p");
@@ -98,8 +106,57 @@
             cps = clickRecord.length;
             cpsCounter.innerHTML = "CPS: " + cps.toString();
             cpsCounter.style.bottom = (cps === 0) ? "-15vh" : "5vh";
+            applyRisingClickEffect(cps);
         }
         setInterval(CPS_Update, 1000);
+
+        function risingTextEffect(text) {
+            let effectElement = document.createElement("div");
+
+            effectElement.innerHTML = text;
+            effectElement.style.position = "absolute";
+            effectElement.style.bottom = "-10vh";
+            effectElement.style.left = Math.random() * 100 + "vw";
+            effectElement.style.fontSize = Math.max(Math.min(50, Math.random() * 100), 20) + "px";
+            effectElement.style.transition = "all 1.5s";
+            effectElement.style.userSelect = "none";
+            effectElement.style.color = "white";
+            effectElement.style.fontWeight = "900";
+            effectElement.style.webkitTextStroke = "2px black";
+
+            document.body.appendChild(effectElement);
+
+            setTimeout(() => {
+                effectElement.style.bottom = "80vh"
+                effectElement.style.opacity = "0";
+            }, 50)
+
+            setTimeout(() => {
+                effectElement.remove();
+            }, 2000);
+        }
+
+        function applyRisingClickEffect(clicks) {
+            if (clicks === 0) return;
+            if (clicks <= 10) {
+                for (let i = 0; i < clicks; i++) {
+                    setTimeout(() => {
+                        risingTextEffect("+1");
+                    }, i * 150);
+                }
+            } else {
+                for (let i = 1; i <= 10; i++) {
+                    setTimeout(() => {
+                        risingTextEffect(`+${Math.floor(clicks/10)}`);
+                    }, i * 150);
+                }
+                if (clicks % 10 > 0) {
+                    setTimeout(() => {
+                        risingTextEffect(`+${clicks%10}`);
+                    }, 150);
+                }
+            }
+        }
 
     </script>
 </body>
